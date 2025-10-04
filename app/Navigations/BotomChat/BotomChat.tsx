@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatNav from '../ChatNav/ChatNav';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import chatPage from '../../Screens/chatPage/chatPage';
 import Groups from "../../Screens/Groups/Groups"
@@ -30,7 +29,7 @@ function BotomChat() {
            else if (route.name === "Status") {
             return <Image className='w-9 h-9' source={require("../../../assets/Icons/status.png")} />
           }
-          return iconName ? <Ionicons name={iconName} size={30} color={color} /> : null;
+
         },
         tabBarLabel: () => null,
       }
