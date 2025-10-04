@@ -3,6 +3,7 @@ import React from 'react'
 import MessageIn from '../../../Components/MessageIn/MessageIn'
 import MessageOut from '../../../Components/MessageOut/MessageOut'
 import { useNavigation } from '@react-navigation/native'
+import {io} from "socket.io-client"
 
 const chatPage = () => {
     const navigation = useNavigation<any>()

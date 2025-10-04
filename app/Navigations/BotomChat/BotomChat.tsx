@@ -1,9 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatNav from '../ChatNav/ChatNav';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FriendLIst from '../../Screens/FriendLIst/FriendLIst';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import chatPage from '../../Screens/chatPage/chatPage';
+import Groups from "../../Screens/Groups/Groups"
+import Status from "../../Screens/Status/Status"
+import Calls from "../../Screens/Calls/Calls"
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -17,9 +20,15 @@ function BotomChat() {
         tabBarIcon: ({ focused, color }) => {
           let iconName;
           if (route.name === "Chats") {
-            iconName = focused ? "chatbox-outline" : "chatbox-sharp";
-          } else if (route.name === "friends") {
-            iconName = focused ? "people-outline" : "people-outline";
+            return <Image className='w-9 h-9' source={require("../../../assets/Icons/Message.png")} />
+          } else if (route.name === "Groups") {
+            return <Image className='w-9 h-9' source={require("../../../assets/Icons/users.png")} />
+          }
+           else if (route.name === "Calls") {
+            return <Image className='w-9 h-9' source={require("../../../assets/Icons/phone.png")} />
+          }
+           else if (route.name === "Status") {
+            return <Image className='w-9 h-9' source={require("../../../assets/Icons/status.png")} />
           }
           return iconName ? <Ionicons name={iconName} size={30} color={color} /> : null;
         },
@@ -27,7 +36,9 @@ function BotomChat() {
       }
     )} >
       <Tab.Screen name="Chats" component={ChatNav} />
-      <Tab.Screen name="friends" component={FriendLIst} />
+      <Tab.Screen name="Status" component={Status} />
+      <Tab.Screen name="Groups" component={Groups} />
+      <Tab.Screen name="Calls" component={Calls} />
     </Tab.Navigator>
   )
   return (
