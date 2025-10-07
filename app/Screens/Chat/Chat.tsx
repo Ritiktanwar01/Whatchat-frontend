@@ -1,34 +1,42 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import ChatComponent from '../../../Components/Chat/Chat'
 
-
-
 const Chat = () => {
-    const [showSearch, setShowSearch] = useState(false)
+    const user = {
+    name: 'Aarav Sharma',
+    avatar: require('../../../assets/dummy.jpg'),
+    lastMessage: 'Hey! Are we still meeting today?',
+    time: '3:42 PM',
+    isOnline: true,
+  }
+    const [text, setText] = useState<string>('')
     return (
-        <View>
-            <View className='w-full h-[18vh] bg-[#1E68D7] items-center flex-row px-6 justify-between'>
-                <Text className='text-white font-bold text-2xl space-x-1'>What's Chat</Text>
-                <TouchableOpacity className='w-7 h-7' onPress={() => setShowSearch(!showSearch)}>
-                    <Image className='w-full h-full' source={require('../../../assets/Icons/search.png')} />
+        <View className='h-full w-full'>
+            <View id='header' className='pt-12 pl-6 flex-row justify-between items-center pr-4 h-[15vh]'>
+                <Text className='text-[#A3D993] font-bold text-3xl'>ZappChat</Text>
+                <TouchableOpacity>
+                    <Image className='w-8 h-8' source={require("../../../assets/new icons/dots.png")} />
                 </TouchableOpacity>
             </View>
-            {
-                showSearch ? (
-                    <View className='w-full h-[8vh] bg-[#1E68D7] flex-row px-6 justify-center'>
-                        <TextInput placeholder='Search' className='w-[90%] h-10 bg-white rounded-md px-4 text-black' />
-                    </View>
-                ) : <View></View>
-            }
-            <FlatList
-                className='h-[82vh] pb-[10vh] bg-transparent'
-                renderItem={() => <ChatComponent />}
-                keyExtractor={(item, index) => index.toString()}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={[1, 2, 3, 4, 5]}
-            />
+            <View className='h-[10vh] w-full'>
+                <View className="flex-row items-center bg-gray-200 rounded-full px-4 py-2 mx-4 my-2">
+                <Image
+                    source={require("../../../assets/new icons/search-interface-symbol.png")} // Replace with your icon path
+                    className="w-5 h-5 mr-2 tint-gray-500"
+                />
+                <TextInput
+                    className="flex-1 text-base text-black"
+                    placeholder="Search"
+                    placeholderTextColor="#888"
+                    value={text}
+                    onChangeText={setText}
+                />
+            </View>
+            </View>
+        <ScrollView className='h-[85vh] w-full'>
+            <ChatComponent user={user}/>
+        </ScrollView>
         </View>
     )
 }
