@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,10 +7,10 @@ import {
     Image,
     TouchableOpacity,
     KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
 } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+
+import socketServices from '../../utils/socketSetup';
 
 type ChatUser = {
     name: string;
@@ -28,6 +28,21 @@ type Message = {
 type ChatRouteProp = RouteProp<{ Chat: { user: ChatUser } }, 'Chat'>;
 
 const ChatScreen = () => {
+
+    useEffect(() => {
+        socketServices.initializeSocket()
+        socketServices.on('receive_message', (message) => {
+            const newMessage: Message = {
+                id: Date.now().toString(),
+                text: message.message,
+                sender: 'them',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            };
+            setMessages((prev) => [newMessage, ...prev]);
+            setInput('');
+        })
+    }, [])
+
     const route = useRoute<ChatRouteProp>();
     const { user } = route.params;
     const navigation = useNavigation();
@@ -41,16 +56,21 @@ const ChatScreen = () => {
 
     const sendMessage = () => {
         if (input.trim()) {
+
+
+            // Update local UI
             const newMessage: Message = {
                 id: Date.now().toString(),
                 text: input,
                 sender: 'me',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             };
-            setMessages((prev) => [newMessage, ...prev]); // prepend for inverted list
+            socketServices.emit("send_message", { to: "rktest", message: input.trim() })
+            setMessages((prev) => [newMessage, ...prev]);
             setInput('');
         }
     };
+
 
     const renderMessage = ({ item }: { item: Message }) => (
         <View
@@ -88,7 +108,7 @@ const ChatScreen = () => {
             <KeyboardAvoidingView className='h-[91vh]' behavior={'padding'}>
                 {/* Messages */}
                 <FlatList
-                className='h-[90%]'
+                    className='h-[90%]'
                     ref={flatListRef}
                     data={messages}
                     keyExtractor={(item) => item.id}

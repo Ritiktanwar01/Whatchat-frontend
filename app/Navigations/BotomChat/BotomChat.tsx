@@ -5,29 +5,100 @@ import chatPage from '../../Screens/chatPage/chatPage';
 import Groups from "../../Screens/Groups/Groups"
 import Status from "../../Screens/Status/Status"
 import Calls from "../../Screens/Calls/Calls"
-import { Image } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
 
 function BotomChat() {
+
   const TabStack = () => (
     <Tab.Navigator screenOptions={({ route }) => (
       {
         headerShown: false,
-        tabBarStyle: { height: 110, width: '100%', paddingTop: 20, justifyContent: 'space-evenly', alignItems: 'center' },
+        tabBarStyle: { height: 110, width: '100%', paddingTop: 28, justifyContent: 'space-evenly', alignItems: 'center' },
         tabBarIcon: ({ focused, color }) => {
-          let iconName;
+
           if (route.name === "Chats") {
-            return <Image className='w-9 h-9' source={require("../../../assets/Icons/Message.png")} />
+
+            if (focused) {
+              return (
+              <View className='items-center w-14'>
+                <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                 <Image className='w-9 h-9' source={require("../../../assets/Icons/message2.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Chats</Text>
+              </View>
+            )
+            }
+            return (
+              <View className='items-center w-14'>
+                <View className='w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                 <Image className='w-9 h-9' source={require("../../../assets/Icons/Message.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Chats</Text>
+              </View>
+            )
           } else if (route.name === "Groups") {
-            return <Image className='w-9 h-9' source={require("../../../assets/Icons/users.png")} />
+
+            if (focused) {
+               return (
+              <View className='items-center w-14'>
+                <View className='w-24 h-14 bg-[#53a73986] flex-row items-center justify-center rounded-[20px]'>
+                  <Image className='w-9 h-9' source={require("../../../assets/Icons/people.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Groups</Text>
+              </View>
+            )
+            }
+             return (
+              <View className='items-center w-14'>
+                <View className='w-24 h-14 flex-row  items-center justify-center rounded-[20px]'>
+                  <Image className='w-9 h-9' source={require("../../../assets/Icons/users.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Groups</Text>
+              </View>
+            )
           }
-           else if (route.name === "Calls") {
-            return <Image className='w-9 h-9' source={require("../../../assets/Icons/phone.png")} />
+          else if (route.name === "Calls") {
+            if (focused) {
+              return (
+              <View className='items-center w-14'>
+                <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                  <Image className='w-8 h-8' source={require("../../../assets/Icons/call.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Calls</Text>
+              </View>
+            )
+            }
+            return (
+              <View className='items-center w-14'>
+                <View className='w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                  <Image className='w-8 h-8' source={require("../../../assets/Icons/phone.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Calls</Text>
+              </View>
+            )
           }
-           else if (route.name === "Status") {
-            return <Image className='w-9 h-9' source={require("../../../assets/Icons/status.png")} />
+          else if (route.name === "Status") {
+            if (focused) {
+              return (
+                <View className='items-center w-14'>
+                  <View className='w-24 h-14 bg-[#53a73986] flex-row items-center justify-center rounded-[20px]'>
+                    <Image className='w-9 h-9' source={require("../../../assets/Icons/updates.png")} />
+                  </View>
+                  <Text className='font-medium text-sm mt-1'>Status</Text>
+                </View>
+              )
+            }
+            return (
+              <View className='items-center w-14'>
+                <View className='w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                  <Image className='w-9 h-9' source={require("../../../assets/Icons/status.png")} />
+                </View>
+                <Text className='font-medium text-sm mt-1'>Status</Text>
+              </View>
+            )
           }
 
         },
