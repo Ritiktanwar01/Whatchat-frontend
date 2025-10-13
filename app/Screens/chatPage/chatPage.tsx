@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useQuery, useRealm } from "@realm/react"
+import { ObjectId } from 'bson';
+import { Message as message } from '../../db/message';
 import {
     View,
     Text,
@@ -7,6 +10,7 @@ import {
     Image,
     TouchableOpacity,
     KeyboardAvoidingView,
+    Alert,
 } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
@@ -19,7 +23,7 @@ type ChatUser = {
 };
 
 type Message = {
-    id: string;
+    _id: string;
     text: string;
     sender: 'me' | 'them';
     time: string;
@@ -28,19 +32,37 @@ type Message = {
 type ChatRouteProp = RouteProp<{ Chat: { user: ChatUser } }, 'Chat'>;
 
 const ChatScreen = () => {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const realm = useRealm();
+    const queriedMessages = useQuery(message);
 
-    useEffect(() => {
+
+
+    useEffect(()=>{
         socketServices.initializeSocket()
         socketServices.on('receive_message', (message) => {
             const newMessage: Message = {
-                id: Date.now().toString(),
+                _id: Date.now().toString(),
                 text: message.message,
                 sender: 'them',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             };
+            realm.write(()=>{
+                realm.create('Message', {
+                        _id: new ObjectId(),
+                        text: message.message,
+                        sender: 'them',
+                        timestamp: new Date(),
+                    });
+            })
             setMessages((prev) => [newMessage, ...prev]);
-            setInput('');
         })
+    },[])
+    useEffect(() => {
+        queriedMessages.map(m => {
+             setMessages((prev) => [m, ...prev]);
+        })
+        
     }, [])
 
     const route = useRoute<ChatRouteProp>();
@@ -48,19 +70,23 @@ const ChatScreen = () => {
     const navigation = useNavigation();
     const flatListRef = useRef<FlatList>(null);
 
-    const [messages, setMessages] = useState<Message[]>([
-        { id: '1', text: 'Hey there!', sender: 'them', time: '3:40 PM' },
-        { id: '2', text: 'Hi! How are you?', sender: 'me', time: '3:41 PM' },
-    ]);
+
     const [input, setInput] = useState('');
 
     const sendMessage = () => {
         if (input.trim()) {
 
-
+            realm.write(() => {
+                    realm.create('Message', {
+                        _id: new ObjectId(),
+                        text: input.trim(),
+                        sender: 'me',
+                        timestamp: new Date(),
+                    });
+                });
             // Update local UI
             const newMessage: Message = {
-                id: Date.now().toString(),
+                _id: Date.now().toString(),
                 text: input,
                 sender: 'me',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -111,7 +137,7 @@ const ChatScreen = () => {
                     className='h-[90%]'
                     ref={flatListRef}
                     data={messages}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item._id}
                     renderItem={renderMessage}
                     contentContainerStyle={{ padding: 12 }}
                     keyboardShouldPersistTaps="handled"
