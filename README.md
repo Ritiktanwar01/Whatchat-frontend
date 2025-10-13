@@ -55,6 +55,7 @@ Whatchat is being developed with:
 - **React Navigation** for routing
 - **Tailwind CSS (NativeWind)** for styling (planned)
 - **Redux/Zustand** for state management (planned)
+- **RealmDB 🗄** for state management (planned)
 
 ---
 
