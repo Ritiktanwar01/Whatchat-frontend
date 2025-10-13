@@ -1,13 +1,29 @@
 import { View, Text, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { storage } from '../../utils/MMKVSetup';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
   useEffect(()=>{
-    setTimeout(() => {
-      navigation.navigate("Login" as never);
+    const auth = storage.getString('auth')
+    if (typeof auth === 'string') {
+    const parsed = JSON.parse(auth);
+    
+    if (parsed.loginState){
+      setTimeout(() => {
+        navigation.navigate('Home' as never)
+      }, 2000);
+    }else{
+      setTimeout(() => {
+      navigation.navigate("email" as never);
     }, 2000);
+    }
+} else {
+  setTimeout(() => {
+      navigation.navigate("email" as never);
+    }, 2000);
+}
   }, []);
   return (
     <View className='h-full w-full flex justify-center items-center bg-[#1E68D7] gap-4'>

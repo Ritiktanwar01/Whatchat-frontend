@@ -39,6 +39,7 @@ const ChatScreen = () => {
 
 
     useEffect(()=>{
+        
         socketServices.initializeSocket()
         socketServices.on('receive_message', (message) => {
             const newMessage: Message = {

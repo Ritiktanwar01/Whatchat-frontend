@@ -1,0 +1,62 @@
+import { storage } from "../app/utils/MMKVSetup";
+
+
+export const Signup = async ({ email }: { email: string }) => {
+    try {
+        const response = await fetch('https://6fa86d4b46fb.ngrok-free.app/SendOtp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server responded with ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return { res: data, status: data.status };
+    } catch (error) {
+        console.error('Signup error:', error);
+        return { success: false, error: (error as Error).message };
+    }
+};
+
+export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
+    try {
+
+        const response = await fetch('https://6fa86d4b46fb.ngrok-free.app/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, OTP: otp }),
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            console.log(data);
+            throw new Error(`Server responded with ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        if (data.login === true) {
+            storage.set('auth', JSON.stringify({
+                loginState: data.login,
+                access_token: data.Access_token,
+                refresh_token: data.Refresh_token,
+            }));
+            return true
+        }
+        return false
+    } catch (error) {
+        console.error('Signup error:', error);
+        return { success: false, error: (error as Error).message };
+    }
+}
+
+
+

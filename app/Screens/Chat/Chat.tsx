@@ -1,21 +1,26 @@
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChatComponent from '../../../Components/Chat/Chat'
+import { User,Message } from '../../db/message'
 
 const Chat = () => {
-    const user = {
-        name: 'Aarav Sharma',
-        avatar: require('../../../assets/dummy.jpg'),
-        lastMessage: 'Hey! Are we still meeting today?',
-        time: '3:42 PM',
-        isOnline: true,
+    const getUsers = async () => {
+        const realm = await Realm.open({ schema: [User, Message] });
+        const users = realm.objects<User>('User');
+
     }
+    const [users,setUsers] = useState([])
+
+    useEffect(()=>{
+        getUsers()
+    },[])
+
     const [text, setText] = useState<string>('')
     return (
         <View className='h-full w-full'>
             <View id='header' className='pt-12 pl-6 flex-row justify-between items-center pr-4 h-[15vh]'>
                 <Text className='text-[#A3D993] font-bold text-3xl'>ZappChat</Text>
-                <TouchableOpacity onPress={()=>Alert.alert("coming soon")}>
+                <TouchableOpacity onPress={() => Alert.alert("coming soon")}>
                     <Image className='w-8 h-8' source={require("../../../assets/Icons/dots.png")} />
                 </TouchableOpacity>
             </View>
@@ -38,7 +43,14 @@ const Chat = () => {
                 <Image className='h-8 w-8' source={require("../../../assets/Icons/plus.png")} />
             </TouchableOpacity>
             <ScrollView className='h-[85vh] w-full'>
-                <ChatComponent user={user} />
+                {
+                    users.map((user,i)=>{
+                        return (
+                            <ChatComponent user={user} key={i}/>
+                        )
+                    })
+                }
+                
             </ScrollView>
         </View>
     )

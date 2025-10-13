@@ -1,4 +1,5 @@
 import io from "socket.io-client"
+import { storage } from "./MMKVSetup";
 
 
 
@@ -12,13 +13,26 @@ class WSSservices {
     SOCKET: ReturnType<typeof io> | undefined;
 
     initializeSocket = async () => {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWZyZXNoX3Rva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5SWpwN0luVnpaWEp1WVcxbElqb2lZMmhoZFdSb1lYSjVJaXdpZFhObGNsOXBaQ0k2SWpZNFpUWTRPR014TkRFNE0yRTBPVE5tWVdKak56RTJOaUo5TENKcFlYUWlPakUzTmpBeE5qTXdNek1zSW1WNGNDSTZNVGMyTURjMk56Z3pNMzAuLWZxVEpZNUtnZXh5eGJpa3FHTnVZaGtSQW1ibFdrd3ByaW45TWdrQ2s4TSIsInVzZXJuYW1lIjoiY2hhdWRoYXJ5IiwiaWF0IjoxNzYwMTYzMDMzLCJleHAiOjE3NjAyNDk0MzN9.fs6VWqVJF5XJF734ET4SXH-qnAZufRMSDZCl3Z6JhQw"
+        const auth = storage.getString('auth');
+
+        let parsed: {
+            loginState: boolean;
+            access_token: string;
+            refresh_token: string;
+        } | null = null;
+
+        if (typeof auth === 'string') {
+            parsed = JSON.parse(auth);
+        }
+
+        const token = parsed?.access_token;
+
         try {
 
-            this.SOCKET = io("http://97.74.90.82:5500", {
+            this.SOCKET = io(`https://6fa86d4b46fb.ngrok-free.app`, {
                 transports: ["websocket"],
                 autoConnect: false,
-                query: {
+                auth: {
                     token,
                 },
             });

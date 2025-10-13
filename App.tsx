@@ -2,18 +2,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import "./globals.css"
 import { StatusBar } from "react-native";
 import AuthNav from "./app/Navigations/AuthNav/AuthNav";
-import { useState } from "react";
 import {RealmProvider} from "@realm/react"
 import {Message} from "./app/db/message"
-import BotomChat from "./app/Navigations/BotomChat/BotomChat";
+import { User } from "./app/db/message";
 
 export default function App() {
-  const [Auth, setAuth] = useState(false)
   return (
-    <RealmProvider schema={[Message]} deleteRealmIfMigrationNeeded>
+    <RealmProvider schema={[User,Message]} deleteRealmIfMigrationNeeded>
       <NavigationContainer>
         <StatusBar hidden={true} />
-        {Auth ? <BotomChat /> : <AuthNav />}
+        <AuthNav />
       </NavigationContainer>
       </RealmProvider>
   );

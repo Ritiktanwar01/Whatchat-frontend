@@ -5,12 +5,16 @@ import {
   TextInput,
   TouchableOpacity,
   TextInput as RNTextInput,
+  Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { VerifyOTP } from '../../../hooks/Auth';
 
 const OTP_LENGTH = 6;
 
 const OtpScreen: React.FC = () => {
+  const route = useRoute();
+  const { email } = route.params as { email: string };
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
   const inputRefs = useRef<Array<RNTextInput | null>>([]);
   const navigation = useNavigation();
@@ -36,11 +40,18 @@ const OtpScreen: React.FC = () => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const otp = otpDigits.join('');
     if (otp.length === OTP_LENGTH) {
-      console.log('Verifying OTP:', otp);
-      navigation.navigate('Home' as never);
+
+      const verify = await VerifyOTP({email,otp})
+      
+      if (verify){
+          navigation.navigate('Home' as never);
+      }else{
+        Alert.alert("invalid OTP")
+      }
+      
     } else {
       console.warn('Please enter a valid 6-digit OTP');
     }
@@ -50,7 +61,7 @@ const OtpScreen: React.FC = () => {
     <View className="flex-1 bg-white px-6 justify-center">
       <Text className="text-green-600 text-3xl font-bold text-center mb-6">Verify OTP</Text>
       <Text className="text-gray-700 text-base text-center mb-4">
-        Enter the 6-digit code sent to your number
+        Enter the 6-digit code sent to your email
       </Text>
 
       <View className="flex-row justify-between mb-6">
