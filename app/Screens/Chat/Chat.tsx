@@ -17,7 +17,7 @@ const Chat = () => {
     }, [allFriends]);
 
      useEffect(() => {
-        console.log('All users in Realm:', JSON.stringify(allFriends, null, 2));
+        // console.log('All users in Realm:', JSON.stringify(allFriends, null, 2));
     }, [allFriends]);
 
     return (

@@ -10,7 +10,7 @@ const AddFriends = () => {
     useEffect(() => {
         const syncContacts = async () => {
             const matchedContacts = await fetchFilteredContacts();
-            console.log('Contacts matched with backend:', matchedContacts);
+            // console.log('Contacts matched with backend:', matchedContacts);
             setContactsList(matchedContacts);
         };
 

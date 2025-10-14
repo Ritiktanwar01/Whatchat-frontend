@@ -53,7 +53,7 @@ const OtpScreen: React.FC = () => {
       }
       
     } else {
-      console.warn('Please enter a valid 6-digit OTP');
+      // console.warn('Please enter a valid 6-digit OTP');
     }
   };
 

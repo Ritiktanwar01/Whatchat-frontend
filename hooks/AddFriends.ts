@@ -31,7 +31,7 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
 
   const permissionGranted = await requestContactsPermission();
   if (!permissionGranted) {
-    console.warn('Contacts permission denied');
+    // console.warn('Contacts permission denied');
     return [];
   }
 
@@ -55,7 +55,7 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
     // Prepare payload: only mobile numbers
     const contactList = formattedContacts.map(c => c.number);
 
-    const response = await fetch('https://077b3df79f12.ngrok-free.app/searchfriend', {
+    const response = await fetch('http://97.74.90.82:5500/searchfriend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,10 +76,10 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
       };
     });
 
-    console.log('Enriched contacts:', enrichedContacts);
+    // console.log('Enriched contacts:', enrichedContacts);
     return enrichedContacts;
   } catch (error) {
-    console.error('Error fetching or syncing contacts:', error);
+    // console.error('Error fetching or syncing contacts:', error);
     return [];
   }
 };

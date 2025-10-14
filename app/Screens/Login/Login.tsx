@@ -44,15 +44,15 @@ const LoginScreen: React.FC = () => {
     if (phone.length === 10) {
       const mobilesetup = await SetMobile(phone)
 
-      console.log('Mobile setup result:', mobilesetup);
+      // console.log('Mobile setup result:', mobilesetup);
 
       if (mobilesetup){
         navigation.navigate('Home' as never);
       }else{
-        console.warn('Failed to set mobile number');
+        // console.warn('Failed to set mobile number');
       }
     } else {
-      console.warn('Please enter a valid 10-digit number');
+      // console.warn('Please enter a valid 10-digit number');
     }
   };
 

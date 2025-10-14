@@ -3,7 +3,7 @@ import { storage } from "../app/utils/MMKVSetup";
 
 export const Signup = async ({ email }: { email: string }) => {
     try {
-        const response = await fetch('https://077b3df79f12.ngrok-free.app/SendOtp', {
+        const response = await fetch('http://97.74.90.82:5500/SendOtp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,10 +16,10 @@ export const Signup = async ({ email }: { email: string }) => {
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         return { res: data, status: data.status };
     } catch (error) {
-        console.error('Signup error:', error);
+        // console.error('Signup error:', error);
         return { success: false, error: (error as Error).message };
     }
 };
@@ -27,7 +27,7 @@ export const Signup = async ({ email }: { email: string }) => {
 export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
     try {
 
-        const response = await fetch('https://077b3df79f12.ngrok-free.app/login', {
+        const response = await fetch('http://97.74.90.82:5500/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,12 +37,12 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
 
         if (!response.ok) {
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             throw new Error(`Server responded with ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (data.login === true) {
             storage.set('auth', JSON.stringify({
                 loginState: data.login,
@@ -54,7 +54,7 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
         }
         return false
     } catch (error) {
-        console.error('Signup error:', error);
+        // console.error('Signup error:', error);
         return { success: false, error: (error as Error).message };
     }
 }
@@ -65,7 +65,7 @@ export const SetMobile = async (mobile: string) => {
         const authData = storage.getString('auth');
         if (!authData) throw new Error('No auth data found');
         const { access_token } = JSON.parse(authData);
-        const response = await fetch('https://077b3df79f12.ngrok-free.app/SetMobile', {
+        const response = await fetch('http://97.74.90.82:5500/SetMobile', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
@@ -88,7 +88,7 @@ export const SetMobile = async (mobile: string) => {
         return false;
     }
     catch (error) {
-        console.error('SetMobile error:', error);
+        // console.error('SetMobile error:', error);
         return { success: false, error: (error as Error).message };
     }
 }

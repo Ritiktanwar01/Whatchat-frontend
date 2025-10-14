@@ -31,7 +31,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const token = parsed?.access_token;
 
     useEffect(() => {
-        const socket = io('https://077b3df79f12.ngrok-free.app', {
+        const socket = io('http://97.74.90.82:5500', {
             transports: ['websocket'],
             autoConnect: true,
             auth: {
@@ -42,17 +42,17 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         socketRef.current = socket;
 
         socket.on('connect', () => {
-            console.log('Socket connected');
+            // console.log('Socket connected');
             setIsConnected(true);
         });
 
         socket.on('disconnect', () => {
-            console.log('Socket disconnected');
+            // console.log('Socket disconnected');
             setIsConnected(false);
         });
 
         socket.on('connect_error', (err) => {
-            console.error('Connection error:', err);
+            // console.error('Connection error:', err);
         });
 
         return () => {
