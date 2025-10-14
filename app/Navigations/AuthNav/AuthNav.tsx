@@ -8,8 +8,9 @@ import OtpScreen from '../../Screens/OtpScreen/OtpScreen';
 import EmailScreen from '../../Screens/EmailLogin/EmailScreen';
 import BotomChat from '../BotomChat/BotomChat';
 
+const Stack = createNativeStackNavigator();
+
 const AuthNav = () => {
-    const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
@@ -18,7 +19,6 @@ const AuthNav = () => {
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name="Otp" component={OtpScreen} options={{ title: 'OTP Verification' }} />
       <Stack.Screen name='Home' component={BotomChat} />
-
     </Stack.Navigator>
   )
 }

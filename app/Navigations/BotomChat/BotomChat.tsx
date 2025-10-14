@@ -6,6 +6,7 @@ import Groups from "../../Screens/Groups/Groups"
 import Status from "../../Screens/Status/Status"
 import Calls from "../../Screens/Calls/Calls"
 import { Image, Text, View } from 'react-native';
+import AddFriends from '../../Screens/AddFriends/AddFriends';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -115,6 +116,7 @@ function BotomChat() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Tab" component={TabStack} />
       <Stack.Screen name="chatPage" component={chatPage} />
+      <Stack.Screen name='AddFriends' component={AddFriends} />
     </Stack.Navigator>
   );
 }

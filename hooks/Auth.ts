@@ -3,7 +3,7 @@ import { storage } from "../app/utils/MMKVSetup";
 
 export const Signup = async ({ email }: { email: string }) => {
     try {
-        const response = await fetch('https://6fa86d4b46fb.ngrok-free.app/SendOtp', {
+        const response = await fetch('https://b9ce29e13daa.ngrok-free.app/SendOtp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export const Signup = async ({ email }: { email: string }) => {
 export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
     try {
 
-        const response = await fetch('https://6fa86d4b46fb.ngrok-free.app/login', {
+        const response = await fetch('https://b9ce29e13daa.ngrok-free.app/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

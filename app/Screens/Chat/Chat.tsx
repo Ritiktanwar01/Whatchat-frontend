@@ -1,19 +1,31 @@
 import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import ChatComponent from '../../../Components/Chat/Chat'
-import { User,Message } from '../../db/message'
+import { User, Message } from '../../db/message'
+import { useNavigation } from '@react-navigation/native'
+
 
 const Chat = () => {
-    const getUsers = async () => {
-        const realm = await Realm.open({ schema: [User, Message] });
-        const users = realm.objects<User>('User');
+    const [users, setUsers] = useState<User[]>([]);
+    const navigation = useNavigation()
 
-    }
-    const [users,setUsers] = useState([])
 
-    useEffect(()=>{
-        getUsers()
-    },[])
+
+    
+
+
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const realm = await Realm.open({ schema: [User, Message] });
+            const userObjects = realm.objects<User>('User');
+            const userList = Array.from(userObjects); // Convert Realm.Results to plain array
+            setUsers(userList);
+            console.log(userList);
+        };
+
+        fetchUsers();
+    }, []);
 
     const [text, setText] = useState<string>('')
     return (
@@ -39,18 +51,18 @@ const Chat = () => {
                     />
                 </View>
             </View>
-            <TouchableOpacity className='absolute h-16 w-16 z-10 bg-[#A3D993] right-6 bottom-10 rounded-full items-center justify-center'>
+            <TouchableOpacity onPress={() => navigation.navigate('AddFriends' as never)} className='absolute h-16 w-16 z-10 bg-[#A3D993] right-6 bottom-10 rounded-full items-center justify-center'>
                 <Image className='h-8 w-8' source={require("../../../assets/Icons/plus.png")} />
             </TouchableOpacity>
             <ScrollView className='h-[85vh] w-full'>
                 {
-                    users.map((user,i)=>{
+                    users.map((user, i) => {
                         return (
-                            <ChatComponent user={user} key={i}/>
+                            <ChatComponent user={user} key={i} />
                         )
                     })
                 }
-                
+
             </ScrollView>
         </View>
     )

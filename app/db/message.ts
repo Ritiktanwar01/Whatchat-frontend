@@ -13,6 +13,7 @@ export class Message extends Realm.Object<Message> {
       _id: 'objectId',
       text: 'string',
       sender: 'string',
+       read: { type: 'bool', default: false },
       timestamp: 'date',
     },
   };
@@ -29,7 +30,7 @@ export class User extends Realm.Object<User> {
     properties: {
       id: 'objectId',
       name: 'string',
-      messages: { type: 'list', objectType: 'Message' }, // ✅ Correct usage
+      messages: { type: 'list', objectType: 'Message' },
     },
   };
 }
