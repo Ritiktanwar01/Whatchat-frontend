@@ -29,7 +29,7 @@ class WSSservices {
 
         try {
 
-            this.SOCKET = io(`https://b9ce29e13daa.ngrok-free.app`, {
+            this.SOCKET = io(`https://077b3df79f12.ngrok-free.app`, {
                 transports: ["websocket"],
                 autoConnect: false,
                 auth: {

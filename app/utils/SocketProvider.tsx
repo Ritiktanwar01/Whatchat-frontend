@@ -31,7 +31,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const token = parsed?.access_token;
 
     useEffect(() => {
-        const socket = io('https://b9ce29e13daa.ngrok-free.app', {
+        const socket = io('https://077b3df79f12.ngrok-free.app', {
             transports: ['websocket'],
             autoConnect: true,
             auth: {

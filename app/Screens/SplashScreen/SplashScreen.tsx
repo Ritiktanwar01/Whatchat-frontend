@@ -9,15 +9,25 @@ const SplashScreen = () => {
     const auth = storage.getString('auth')
     if (typeof auth === 'string') {
     const parsed = JSON.parse(auth);
+
     
     if (parsed.loginState){
-      setTimeout(() => {
-        navigation.navigate('Home' as never)
+      if (  parsed.mobile && parsed.mobile.length === 10) {
+        setTimeout(() => {
+          navigation.navigate('Home' as never)
+        }, 2000);
+        return;
+      }else{
+        setTimeout(() => {
+        navigation.navigate('Login' as never)
       }, 2000);
+      return;
+      }
     }else{
       setTimeout(() => {
       navigation.navigate("email" as never);
     }, 2000);
+    return;
     }
 } else {
   setTimeout(() => {

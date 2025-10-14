@@ -5,13 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 const AddFriends = () => {
     const [contactsList, setContactsList] = useState<BackendContact[]>([]);
-    const user = {
-        name: 'Aarav Sharma',
-        avatar: require('../../../assets/dummy.jpg'),
-        lastMessage: 'Hey! Are we still meeting today?',
-        time: '3:42 PM',
-        isOnline: true,
-    }
+    
 
     useEffect(() => {
         const syncContacts = async () => {

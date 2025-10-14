@@ -3,7 +3,7 @@ import { storage } from "../app/utils/MMKVSetup";
 
 export const Signup = async ({ email }: { email: string }) => {
     try {
-        const response = await fetch('https://b9ce29e13daa.ngrok-free.app/SendOtp', {
+        const response = await fetch('https://077b3df79f12.ngrok-free.app/SendOtp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export const Signup = async ({ email }: { email: string }) => {
 export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
     try {
 
-        const response = await fetch('https://b9ce29e13daa.ngrok-free.app/login', {
+        const response = await fetch('https://077b3df79f12.ngrok-free.app/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,6 +48,7 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
                 loginState: data.login,
                 access_token: data.Access_token,
                 refresh_token: data.Refresh_token,
+                mobile: '',
             }));
             return true
         }
@@ -58,5 +59,38 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
     }
 }
 
+
+export const SetMobile = async (mobile: string) => {
+    try {
+        const authData = storage.getString('auth');
+        if (!authData) throw new Error('No auth data found');
+        const { access_token } = JSON.parse(authData);
+        const response = await fetch('https://077b3df79f12.ngrok-free.app/SetMobile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${access_token}`,
+            },
+            body: JSON.stringify({ mobile }),
+        });
+        if (!response.ok) {
+            throw new Error(`Server responded with ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success) {
+            const updatedAuthData = {
+                ...JSON.parse(authData),
+                mobile: mobile,
+            };
+            storage.set('auth', JSON.stringify(updatedAuthData));
+            return true;
+        }
+        return false;
+    }
+    catch (error) {
+        console.error('SetMobile error:', error);
+        return { success: false, error: (error as Error).message };
+    }
+}
 
 

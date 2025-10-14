@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { countries, Country } from '../../utils/countries';
+import { SetMobile } from '../../../hooks/Auth';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -38,10 +39,18 @@ const LoginScreen: React.FC = () => {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const phone = phoneDigits.join('');
     if (phone.length === 10) {
-      navigation.navigate('Otp' as never);
+      const mobilesetup = await SetMobile(phone)
+
+      console.log('Mobile setup result:', mobilesetup);
+
+      if (mobilesetup){
+        navigation.navigate('Home' as never);
+      }else{
+        console.warn('Failed to set mobile number');
+      }
     } else {
       console.warn('Please enter a valid 10-digit number');
     }

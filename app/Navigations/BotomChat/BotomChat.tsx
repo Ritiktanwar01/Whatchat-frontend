@@ -7,6 +7,7 @@ import Status from "../../Screens/Status/Status"
 import Calls from "../../Screens/Calls/Calls"
 import { Image, Text, View } from 'react-native';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
+import { SocketProvider } from '../../utils/SocketProvider';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -24,18 +25,18 @@ function BotomChat() {
 
             if (focused) {
               return (
-              <View className='items-center w-14'>
-                <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
-                 <Image className='w-9 h-9' source={require("../../../assets/Icons/message2.png")} />
+                <View className='items-center w-14'>
+                  <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                    <Image className='w-9 h-9' source={require("../../../assets/Icons/message2.png")} />
+                  </View>
+                  <Text className='font-medium text-sm mt-1'>Chats</Text>
                 </View>
-                <Text className='font-medium text-sm mt-1'>Chats</Text>
-              </View>
-            )
+              )
             }
             return (
               <View className='items-center w-14'>
                 <View className='w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
-                 <Image className='w-9 h-9' source={require("../../../assets/Icons/Message.png")} />
+                  <Image className='w-9 h-9' source={require("../../../assets/Icons/Message.png")} />
                 </View>
                 <Text className='font-medium text-sm mt-1'>Chats</Text>
               </View>
@@ -43,16 +44,16 @@ function BotomChat() {
           } else if (route.name === "Groups") {
 
             if (focused) {
-               return (
-              <View className='items-center w-14'>
-                <View className='w-24 h-14 bg-[#53a73986] flex-row items-center justify-center rounded-[20px]'>
-                  <Image className='w-9 h-9' source={require("../../../assets/Icons/people.png")} />
+              return (
+                <View className='items-center w-14'>
+                  <View className='w-24 h-14 bg-[#53a73986] flex-row items-center justify-center rounded-[20px]'>
+                    <Image className='w-9 h-9' source={require("../../../assets/Icons/people.png")} />
+                  </View>
+                  <Text className='font-medium text-sm mt-1'>Groups</Text>
                 </View>
-                <Text className='font-medium text-sm mt-1'>Groups</Text>
-              </View>
-            )
+              )
             }
-             return (
+            return (
               <View className='items-center w-14'>
                 <View className='w-24 h-14 flex-row  items-center justify-center rounded-[20px]'>
                   <Image className='w-9 h-9' source={require("../../../assets/Icons/users.png")} />
@@ -64,13 +65,13 @@ function BotomChat() {
           else if (route.name === "Calls") {
             if (focused) {
               return (
-              <View className='items-center w-14'>
-                <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
-                  <Image className='w-8 h-8' source={require("../../../assets/Icons/call.png")} />
+                <View className='items-center w-14'>
+                  <View className='bg-[#53a73986] w-24 h-14 flex-row items-center justify-center rounded-[20px]'>
+                    <Image className='w-8 h-8' source={require("../../../assets/Icons/call.png")} />
+                  </View>
+                  <Text className='font-medium text-sm mt-1'>Calls</Text>
                 </View>
-                <Text className='font-medium text-sm mt-1'>Calls</Text>
-              </View>
-            )
+              )
             }
             return (
               <View className='items-center w-14'>
@@ -113,11 +114,13 @@ function BotomChat() {
     </Tab.Navigator>
   )
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Tab" component={TabStack} />
-      <Stack.Screen name="chatPage" component={chatPage} />
-      <Stack.Screen name='AddFriends' component={AddFriends} />
-    </Stack.Navigator>
+    <SocketProvider>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Tab" component={TabStack} />
+        <Stack.Screen name="chatPage" component={chatPage} />
+        <Stack.Screen name='AddFriends' component={AddFriends} />
+      </Stack.Navigator>
+    </SocketProvider>
   );
 }
 

@@ -55,7 +55,7 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
     // Prepare payload: only mobile numbers
     const contactList = formattedContacts.map(c => c.number);
 
-    const response = await fetch('https://b9ce29e13daa.ngrok-free.app/searchfriend', {
+    const response = await fetch('https://077b3df79f12.ngrok-free.app/searchfriend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

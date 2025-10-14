@@ -1,8 +1,6 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chat from '../../Screens/Chat/Chat';
-import chatPage from '../../Screens/chatPage/chatPage';
-import AddFriends from '../../Screens/AddFriends/AddFriends';
 
 
 const Stack = createNativeStackNavigator();

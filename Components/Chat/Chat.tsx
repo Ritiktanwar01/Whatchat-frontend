@@ -19,7 +19,7 @@ const Chat:React.FC<ChatItemProps> = ({user}) => {
   const navigation = useNavigation();
   const {profilePicture,email,mobile,name} = user
   return (
-     <TouchableOpacity className="flex-row items-center px-4 py-3 border-b border-gray-200"  onPress={() => navigation.navigate("chatPage", { user })}>
+     <TouchableOpacity className="flex-row items-center px-4 py-3 border-b border-gray-200"  onPress={() => navigation.navigate("chatPage" as never,{user})}>
       <View className="relative">
         <Image
           source={{ uri: profilePicture }}
