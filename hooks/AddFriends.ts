@@ -1,5 +1,6 @@
 import { PermissionsAndroid, Platform } from 'react-native';
 import Contacts from 'react-native-contacts';
+import { API_BASE_URL } from './ServerConf';
 
 export interface FormattedContact {
   name: string;
@@ -55,7 +56,7 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
     // Prepare payload: only mobile numbers
     const contactList = formattedContacts.map(c => c.number);
 
-    const response = await fetch('http://97.74.90.82:5500/searchfriend', {
+    const response = await fetch(`${API_BASE_URL}/searchfriend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

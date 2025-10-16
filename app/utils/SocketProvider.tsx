@@ -1,6 +1,7 @@
 // socket/SocketContext.tsx
 import { storage } from "./MMKVSetup";
 import io, { Socket } from 'socket.io-client';
+import { API_BASE_URL } from "../../hooks/ServerConf";
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 interface SocketContextType {
@@ -31,10 +32,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const token = parsed?.access_token;
 
     useEffect(() => {
-        const socket = io('http://97.74.90.82:5500', {
+        const socket = io(`${API_BASE_URL}`, {
             transports: ['websocket'],
             autoConnect: true,
-            auth: {
+            query: {
                 token // Replace with dynamic token logic
             },
         });

@@ -46,8 +46,8 @@ const OtpScreen: React.FC = () => {
 
       const verify = await VerifyOTP({email,otp})
       
-      if (verify){
-          navigation.navigate('Login' as never);
+      if (verify.login){
+          navigation.navigate(verify.screen as never);
       }else{
         Alert.alert("invalid OTP")
       }

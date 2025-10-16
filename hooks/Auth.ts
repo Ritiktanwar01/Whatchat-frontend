@@ -1,9 +1,10 @@
 import { storage } from "../app/utils/MMKVSetup";
+import { API_BASE_URL } from "./ServerConf";
 
 
 export const Signup = async ({ email }: { email: string }) => {
     try {
-        const response = await fetch('http://97.74.90.82:5500/SendOtp', {
+        const response = await fetch(`${API_BASE_URL}/SendOtp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export const Signup = async ({ email }: { email: string }) => {
 export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
     try {
 
-        const response = await fetch('http://97.74.90.82:5500/login', {
+        const response = await fetch(`${API_BASE_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,16 +44,26 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
 
         const data = await response.json();
         // console.log(data);
+
         if (data.login === true) {
+            if (data.mobile) {
+                storage.set('auth', JSON.stringify({
+                    loginState: data.login,
+                    access_token: data.Access_token,
+                    refresh_token: data.Refresh_token,
+                    mobile: data.mobile,
+                }));
+                return { screen: 'Home',login:true }
+            }
             storage.set('auth', JSON.stringify({
                 loginState: data.login,
                 access_token: data.Access_token,
                 refresh_token: data.Refresh_token,
                 mobile: '',
             }));
-            return true
+            return { screen: 'Login',login:true }
         }
-        return false
+        return { login:false }
     } catch (error) {
         // console.error('Signup error:', error);
         return { success: false, error: (error as Error).message };
@@ -65,10 +76,10 @@ export const SetMobile = async (mobile: string) => {
         const authData = storage.getString('auth');
         if (!authData) throw new Error('No auth data found');
         const { access_token } = JSON.parse(authData);
-        const response = await fetch('http://97.74.90.82:5500/SetMobile', {
+        const response = await fetch(`${API_BASE_URL}/SetMobile`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', 
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${access_token}`,
             },
             body: JSON.stringify({ mobile }),

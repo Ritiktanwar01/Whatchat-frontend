@@ -1,6 +1,7 @@
 import { View, Text,Image ,ImageSourcePropType, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { API_BASE_URL } from '../../hooks/ServerConf';
 
 export interface ContactCardProps {
   email: string;
@@ -22,7 +23,7 @@ const Chat:React.FC<ChatItemProps> = ({user}) => {
      <TouchableOpacity className="flex-row items-center px-4 py-3 border-b border-gray-200"  onPress={() => navigation.navigate("chatPage" as never,{user})}>
       <View className="relative">
         <Image
-          source={{ uri: profilePicture }}
+          source={{ uri: `${API_BASE_URL}${profilePicture}` }}
           className="w-12 h-12 rounded-full"
         />
         {isOnline && (

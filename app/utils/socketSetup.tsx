@@ -1,5 +1,6 @@
 import io from "socket.io-client"
 import { storage } from "./MMKVSetup";
+import { API_BASE_URL } from "../../hooks/ServerConf";
 
 
 
@@ -29,7 +30,7 @@ class WSSservices {
 
         try {
 
-            this.SOCKET = io(`https://077b3df79f12.ngrok-free.app`, {
+            this.SOCKET = io(`${API_BASE_URL}`, {
                 transports: ["websocket"],
                 autoConnect: false,
                 auth: {
