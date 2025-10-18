@@ -1,6 +1,7 @@
 import { PermissionsAndroid, Platform } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { API_BASE_URL } from './ServerConf';
+import { storage } from '../app/utils/MMKVSetup';
 
 export interface FormattedContact {
   name: string;
@@ -56,10 +57,15 @@ export const fetchFilteredContacts = async (): Promise<BackendContact[]> => {
     // Prepare payload: only mobile numbers
     const contactList = formattedContacts.map(c => c.number);
 
+    const rawAuth = storage.getString('auth');
+    const { access_token } = typeof rawAuth === 'string' ? JSON.parse(rawAuth) : null;
+    
+
     const response = await fetch(`${API_BASE_URL}/searchfriend`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`,
       },
       body: JSON.stringify({ contactList }), // ✅ only mobile numbers
     });

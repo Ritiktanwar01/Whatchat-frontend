@@ -35,7 +35,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const socket = io(`${API_BASE_URL}`, {
             transports: ['websocket'],
             autoConnect: true,
-            auth: {
+            query: {
                 token // Replace with dynamic token logic
             },
         });

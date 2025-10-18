@@ -4,53 +4,49 @@ import { Realm } from '@realm/react';
 
 type ChatUser = {
   email: string;
-  name: string;
+  name?: string;
   mobile: string;
   profilePicture: string;
 };
+
+const toDateFromUnix = (unix: number): Date => new Date(unix);
 
 export const saveMessageToFriend = (
   realm: Realm,
   user: ChatUser,
   text: string,
-  sender: 'me' | 'them'
+  sender: 'me' | 'them',
+  serverTimestamp?: number
 ) => {
   realm.write(() => {
-    console.log("writing..")
-    // Try to find existing ChatFriend
     let friend = realm
       .objects(ChatFriend)
       .filtered(`email == "${user.email}"`)[0];
 
-    // If not found, create a new managed ChatFriend object
     if (!friend) {
-      console.log("creating new one for",user.email,friend)
-      realm.create(ChatFriend, {
+      friend = realm.create(ChatFriend, {
         _id: new ObjectId(),
         email: user.email,
-        name: user.name,
+        name: user.name || user.mobile || 'Unknown',
         mobile: user.mobile,
         last_online: new Date().toISOString(),
         profilePicture: user.profilePicture,
-        // messages will be auto-initialized by Realm
+        messages: [],
       });
-
-      // Re-fetch to ensure we get the managed object with initialized messages
-      friend = realm
-        .objects(ChatFriend)
-        .filtered(`email == "${user.email}"`)[0];
     }
 
-    // Create a new managed Message object
+    const timestamp = serverTimestamp
+      ? toDateFromUnix(serverTimestamp)
+      : new Date();
+
     const newMessage = realm.create(Message, {
       _id: new ObjectId(),
       text,
       sender,
-      timestamp: new Date(),
+      timestamp,
       seen: false,
     });
 
-    // Push the new message into the managed list
     friend.messages.push(newMessage);
   });
 };

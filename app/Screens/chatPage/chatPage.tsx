@@ -75,7 +75,7 @@ const ChatScreen = () => {
     if (!input.trim()) return;
 
     const text = input.trim();
-    saveMessageToFriend(realm, user, text, 'me');
+    saveMessageToFriend(realm, user, text, 'me', Date.now());
     socket?.emit('send_message', { to: user.email, message: text });
     setInput('');
   };

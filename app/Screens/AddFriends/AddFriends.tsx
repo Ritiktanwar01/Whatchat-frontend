@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { fetchFilteredContacts, FormattedContact,BackendContact } from '../../../hooks/AddFriends';
 import ChatComponent from '../../../Components/Chat/Chat'
 import React, { useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ const AddFriends = () => {
     useEffect(() => {
         const syncContacts = async () => {
             const matchedContacts = await fetchFilteredContacts();
-            // console.log('Contacts matched with backend:', matchedContacts);
+    
             setContactsList(matchedContacts);
         };
 

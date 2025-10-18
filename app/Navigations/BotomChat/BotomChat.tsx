@@ -8,11 +8,13 @@ import Calls from "../../Screens/Calls/Calls"
 import { Image, Text, View } from 'react-native';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
 import { SocketProvider } from '../../utils/SocketProvider';
+import { useFirebaseNotifications } from '../../../hooks/useFirebaseSetup';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
 
 function BotomChat() {
+  useFirebaseNotifications()
 
   const TabStack = () => (
     <Tab.Navigator screenOptions={({ route }) => (
