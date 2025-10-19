@@ -13,6 +13,7 @@ import { Message as RealmMessage, ChatFriend } from '../../db/message';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useSocket } from '../../utils/SocketProvider';
 import { saveMessageToFriend } from '../../utils/realmHelpers';
+import { API_BASE_URL } from '../../../hooks/ServerConf';
 
 type ChatUser = {
   name: string;
@@ -104,7 +105,7 @@ const ChatScreen = () => {
             source={require('../../../assets/Icons/back.png')}
           />
         </TouchableOpacity>
-        <Image source={{ uri: user.profilePicture }} className="w-10 h-10 rounded-full mr-3" />
+        <Image source={{ uri: `${API_BASE_URL}${user.profilePicture}` }} className="w-10 h-10 rounded-full mr-3" />
         <View className="flex-1">
           <Text className="text-lg font-semibold text-black">{user.name}</Text>
           <Text className="text-xs text-gray-500">

@@ -1,16 +1,14 @@
 import { useEffect } from 'react';
 import {
   getMessaging,
-  getToken,
   onMessage,
   onNotificationOpenedApp,
   getInitialNotification,
   onTokenRefresh,
-  requestPermission,
   AuthorizationStatus,
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { storage } from '../app/utils/MMKVSetup';
 import { API_BASE_URL } from './ServerConf';
 
@@ -18,13 +16,9 @@ export function useFirebaseNotifications() {
   useEffect(() => {
     const messaging = getMessaging();
 
-    const iosPermissions: FirebaseMessagingTypes.IOSPermissions = {
-      alert: true,
-      badge: true,
-      sound: true,
-    };
-
-    requestPermission(messaging, iosPermissions)
+    // ✅ Request permission correctly
+    messaging
+      .requestPermission()
       .then((authStatus: FirebaseMessagingTypes.AuthorizationStatus) => {
         const enabled =
           authStatus === AuthorizationStatus.AUTHORIZED ||
@@ -87,7 +81,6 @@ export function useFirebaseNotifications() {
 async function registerDeviceToken(messaging: FirebaseMessagingTypes.Module): Promise<void> {
   try {
     const rawAuth = storage.getString('auth');
-
     if (!rawAuth) {
       console.warn('No auth token found in storage');
       return;
@@ -99,7 +92,6 @@ async function registerDeviceToken(messaging: FirebaseMessagingTypes.Module): Pr
       if (typeof parsed === 'string') {
         accessToken = parsed;
       } else {
-        console.log(parsed)
         console.warn('Parsed auth token is not a string');
         return;
       }

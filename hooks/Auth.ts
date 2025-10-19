@@ -53,7 +53,7 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
                     refresh_token: data.Refresh_token,
                     mobile: data.mobile,
                 }));
-                return { screen: 'Home',login:true }
+                return { screen: 'ProfilePic',login:true }
             }
             storage.set('auth', JSON.stringify({
                 loginState: data.login,

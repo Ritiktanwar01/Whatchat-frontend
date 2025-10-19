@@ -6,6 +6,7 @@ import Signup from '../../Screens/Signup/Signup';
 import OtpScreen from '../../Screens/OtpScreen/OtpScreen';
 import EmailScreen from '../../Screens/EmailLogin/EmailScreen';
 import BotomChat from '../BotomChat/BotomChat';
+import ProfilePicScreen from '../../Screens/ProfilePic/ProfilePic';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const AuthNav = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name="Otp" component={OtpScreen}  />
+      <Stack.Screen name='ProfilePic' component={ProfilePicScreen} />
       <Stack.Screen name='Home' component={BotomChat} />
     </Stack.Navigator>
   )
