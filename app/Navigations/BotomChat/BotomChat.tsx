@@ -9,6 +9,7 @@ import { Image, Text, View } from 'react-native';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
 import { SocketProvider } from '../../utils/SocketProvider';
 import { useFirebaseNotifications } from '../../../hooks/useFirebaseSetup';
+import Settings from '../../Screens/Settings/Settings';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -121,6 +122,7 @@ function BotomChat() {
         <Stack.Screen name="Tab" component={TabStack} />
         <Stack.Screen name="chatPage" component={chatPage} />
         <Stack.Screen name='AddFriends' component={AddFriends} />
+        <Stack.Screen name="settings" component={Settings} />
       </Stack.Navigator>
     </SocketProvider>
   );

@@ -70,7 +70,6 @@ const ChatScreen = () => {
     });
   }, [queriedFriend, user.profilePicture]);
 
-  // ✅ Handle incoming socket messages
 
   const sendMessage = () => {
     if (!input.trim()) return;

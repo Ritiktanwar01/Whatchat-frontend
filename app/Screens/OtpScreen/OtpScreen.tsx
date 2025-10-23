@@ -4,11 +4,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TextInput as RNTextInput,
   Alert,
+  TextInput as RNTextInput,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { VerifyOTP } from '../../../hooks/Auth';
+import { Signup, VerifyOTP } from '../../../hooks/Auth';
 
 const OTP_LENGTH = 6;
 
@@ -19,8 +19,24 @@ const OtpScreen: React.FC = () => {
   const inputRefs = useRef<Array<RNTextInput | null>>([]);
   const navigation = useNavigation();
 
+  const ResendOTP = async () => {
+    try {
+      const resend = await Signup({email});
+      if (resend) {
+        Alert.alert('OTP resent successfully');
+      } else {
+        Alert.alert('Failed to resend OTP');
+      }
+
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
-    inputRefs.current = Array(OTP_LENGTH).fill(null);
+    setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 100);
   }, []);
 
   const handleDigitChange = (text: string, index: number) => {
@@ -30,36 +46,38 @@ const OtpScreen: React.FC = () => {
     setOtpDigits(newDigits);
 
     if (digit && index < OTP_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
+      setTimeout(() => {
+        inputRefs.current[index + 1]?.focus();
+      }, 10);
     }
   };
 
   const handleBackspace = (e: any, index: number) => {
     if (e.nativeEvent.key === 'Backspace' && !otpDigits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+      setTimeout(() => {
+        inputRefs.current[index - 1]?.focus();
+      }, 10);
     }
   };
 
   const handleVerify = async () => {
     const otp = otpDigits.join('');
     if (otp.length === OTP_LENGTH) {
+      const verify = await VerifyOTP({ email, otp });
 
-      const verify = await VerifyOTP({email,otp})
-      
-      if (verify.login){
-          navigation.navigate(verify.screen as never);
-      }else{
-        Alert.alert("invalid OTP")
+      if (verify.login) {
+        navigation.navigate(verify.screen as never);
+      } else {
+        Alert.alert('Invalid OTP');
       }
-      
     } else {
-      // console.warn('Please enter a valid 6-digit OTP');
+      Alert.alert('Please enter a valid 6-digit OTP');
     }
   };
 
   return (
     <View className="flex-1 bg-white px-6 justify-center">
-      <Text className="text-green-600 text-3xl font-bold text-center mb-6">Verify OTP</Text>
+      <Text className="text-[#A3D993] text-3xl font-bold text-center mb-6">Verify OTP</Text>
       <Text className="text-gray-700 text-base text-center mb-4">
         Enter the 6-digit code sent to your email
       </Text>
@@ -80,13 +98,13 @@ const OtpScreen: React.FC = () => {
       </View>
 
       <TouchableOpacity
-        className="bg-green-500 py-3 rounded-md"
+        className="bg-[#A3D993] py-3 rounded-md"
         onPress={handleVerify}
       >
         <Text className="text-white text-center text-base font-medium">Verify</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity className="mt-4">
+      <TouchableOpacity className="mt-4" onPress={ResendOTP}>
         <Text className="text-center text-sm text-gray-600">Resend OTP</Text>
       </TouchableOpacity>
     </View>

@@ -1,4 +1,4 @@
-import { View, Text,Image ,ImageSourcePropType, TouchableOpacity} from 'react-native'
+import { View, Text,Image , TouchableOpacity} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_URL } from '../../hooks/ServerConf';
@@ -16,6 +16,7 @@ type ChatItemProps = {
 };
 
 const Chat:React.FC<ChatItemProps> = ({user}) => {
+  console.log("user in chat item",user)
   let isOnline = false;
   const navigation = useNavigation();
   const {profilePicture,name} = user

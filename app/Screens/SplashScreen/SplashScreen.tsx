@@ -2,13 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { storage } from '../../utils/MMKVSetup';
+import { Refresh_Access_token } from '../../../hooks/Auth';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const isTokenStale = (createdAtStr: string | undefined): boolean => {
+    if (!createdAtStr) return true;
+    const createdAt = new Date(createdAtStr);
+    const now = new Date();
+    const ageInMs = now.getTime() - createdAt.getTime();
+    return ageInMs > 24 * 60 * 60 * 1000; // 1 day in ms
+  };
+
   useEffect(() => {
-    // Animate text
     Animated.sequence([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -27,11 +35,18 @@ const SplashScreen = () => {
       }),
     ]).start();
 
-    // Navigation logic
-    const auth = storage.getString('auth');
-    const parsed = typeof auth === 'string' ? JSON.parse(auth) : null;
+    const handleAuthFlow = async () => {
+      const auth = storage.getString('auth');
+      const parsed = typeof auth === 'string' ? JSON.parse(auth) : null;
 
-    const timeout = setTimeout(() => {
+      if (parsed?.access_token_created_at && isTokenStale(parsed.access_token_created_at)) {
+        const refreshed = await Refresh_Access_token();
+        if (!refreshed) {
+          navigation.navigate('email' as never);
+          return;
+        }
+      }
+
       if (parsed?.loginState) {
         if (parsed.mobile && parsed.mobile.length === 10) {
           navigation.navigate('Home' as never);
@@ -41,6 +56,10 @@ const SplashScreen = () => {
       } else {
         navigation.navigate('email' as never);
       }
+    };
+
+    const timeout = setTimeout(() => {
+      handleAuthFlow();
     }, 2000);
 
     return () => clearTimeout(timeout);

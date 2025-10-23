@@ -66,7 +66,7 @@ const Chat = () => {
     <View className="h-full w-full">
       <View className="pt-12 pl-6 flex-row justify-between items-center pr-4 h-[15vh]">
         <Text className="text-[#A3D993] font-bold text-3xl">ZappChat</Text>
-        <TouchableOpacity onPress={() => Alert.alert('coming soon')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProfilePic' as never)}>
           <Image
             className="w-8 h-8"
             source={require('../../../assets/Icons/dots.png')}

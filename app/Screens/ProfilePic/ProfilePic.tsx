@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -93,7 +93,7 @@ const ProfilePicScreen = () => {
         method: 'PUT',
         body: formData,
         headers: {
-          Authorization: `Bearer ${accessToken}`, // ✅ DO NOT set Content-Type manually
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -110,6 +110,40 @@ const ProfilePicScreen = () => {
       Alert.alert('Upload failed', 'Network or server error');
     }
   };
+
+  const FetchMyProfilePic = async () => {
+    const authDataString = storage.getString('auth');
+    if (!authDataString) {
+      Alert.alert('Missing auth info');
+      return;
+    }
+    const authData = JSON.parse(authDataString);
+    const accessToken = authData.access_token;
+    if (!accessToken) {
+      Alert.alert('Invalid auth data');
+      return;
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/Get_User_Profile_Pic`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const result = await response.json();
+      if (response.ok && result.pic && result.pic.profilePicture) {
+        setImageAsset({ uri: `${API_BASE_URL}${result.pic.profilePicture}` });
+      } else {
+        console.log('No profile picture found or server error');
+      }
+    } catch (error) {
+      console.error('Fetch profile pic error:', error);
+    }
+  };
+
+  useEffect(()=>{
+    FetchMyProfilePic();
+  },[])
 
   const skipUpload = () => {
     navigation.navigate('Home' as never);

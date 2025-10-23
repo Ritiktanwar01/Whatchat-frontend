@@ -2,7 +2,17 @@ import { storage } from "../app/utils/MMKVSetup";
 import { API_BASE_URL } from "./ServerConf";
 
 
+let lastCallTime: number | null = null;
+
 export const Signup = async ({ email }: { email: string }) => {
+    const now = Date.now();
+
+    if (lastCallTime && now - lastCallTime < 4000) {
+        return { success: false, error: 'Debounced: Please wait before retrying.' };
+    }
+
+    lastCallTime = now;
+
     try {
         const response = await fetch(`${API_BASE_URL}/SendOtp`, {
             method: 'POST',
@@ -17,13 +27,12 @@ export const Signup = async ({ email }: { email: string }) => {
         }
 
         const data = await response.json();
-        // console.log(data);
         return { res: data, status: data.status };
     } catch (error) {
-        // console.error('Signup error:', error);
         return { success: false, error: (error as Error).message };
     }
 };
+
 
 export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) => {
     try {
@@ -44,26 +53,35 @@ export const VerifyOTP = async ({ email, otp }: { email: string, otp: string }) 
 
         const data = await response.json();
         // console.log(data);
+        const now = new Date().toISOString();
+
+
 
         if (data.login === true) {
             if (data.mobile) {
                 storage.set('auth', JSON.stringify({
                     loginState: data.login,
                     access_token: data.Access_token,
+                    access_token_created_at: now,
                     refresh_token: data.Refresh_token,
+                    refresh_token_created_at: now,
                     mobile: data.mobile,
                 }));
-                return { screen: 'ProfilePic',login:true }
+
+                return { screen: 'ProfilePic', login: true }
             }
             storage.set('auth', JSON.stringify({
                 loginState: data.login,
                 access_token: data.Access_token,
+                access_token_created_at: now,
                 refresh_token: data.Refresh_token,
-                mobile: '',
+                refresh_token_created_at: now,
+                mobile: data.mobile,
             }));
-            return { screen: 'Login',login:true }
+
+            return { screen: 'Login', login: true }
         }
-        return { login:false }
+        return { login: false }
     } catch (error) {
         // console.error('Signup error:', error);
         return { success: false, error: (error as Error).message };
@@ -104,4 +122,41 @@ export const SetMobile = async (mobile: string) => {
     }
 }
 
+
+
+export const Refresh_Access_token = async () => {
+    try {
+        const authData = storage.getString('auth');
+        if (!authData) throw new Error('No auth data found');
+
+        const { refresh_token } = JSON.parse(authData);
+
+        const response = await fetch(`${API_BASE_URL}/refresh`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${refresh_token}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.Access_token) {
+            const now = new Date().toISOString();
+            const updatedAuthData = {
+                ...JSON.parse(authData),
+                access_token: data.Access_token,
+                access_token_created_at: now,
+            };
+            storage.set('auth', JSON.stringify(updatedAuthData));
+            return true;
+        } else {
+            storage.clearAll();
+            return false;
+        }
+    } catch (error) {
+        console.error('Refresh token error:', error);
+        return false;
+    }
+};
 
