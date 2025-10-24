@@ -71,7 +71,7 @@ const Chat: React.FC = () => {
     socket.emit('get_active_friends', { friendEmails });
 
     socket.on('active_friends_list', ({ active }: { active: string[] }) => {
-      console.log('✅ Active friends on load:', active);
+      // console.log('✅ Active friends on load:', active);
 
       setFriendlist(prev =>
         prev.map(friend => 
@@ -81,7 +81,7 @@ const Chat: React.FC = () => {
     });
 
     socket.on('friend_online', ({ email }: { email: string }) => {
-      console.log(`🟢 Friend online: ${email}`);
+      // console.log(`🟢 Friend online: ${email}`);
       setFriendlist(prev =>
         prev.map(friend => 
           friend.email === email ? Object.assign({}, friend, { isOnline: true }) : friend
@@ -90,7 +90,7 @@ const Chat: React.FC = () => {
     });
 
     socket.on('friend_offline', ({ email }: { email: string }) => {
-      console.log(`🔴 Friend offline: ${email}`);
+      // console.log(`🔴 Friend offline: ${email}`);
       setFriendlist(prev =>
         prev.map(friend =>
           friend.email === email ? Object.assign(friend, { isOnline: false }) : friend
