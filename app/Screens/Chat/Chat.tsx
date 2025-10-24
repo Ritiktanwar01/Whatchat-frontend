@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Alert,
 } from 'react-native';
 import React, { useMemo, useState, useEffect } from 'react';
 import ChatComponent from '../../../Components/Chat/Chat';
@@ -19,22 +18,32 @@ import {
   requestContactsPermission,
 } from '../../../hooks/GetName';
 
-const Chat = () => {
+// 👇 Extend ChatFriend with isOnline
+type ExtendedChatFriend = ChatFriend & {
+  isOnline?: boolean;
+};
+
+const Chat: React.FC = () => {
   const navigation = useNavigation();
-  const [text, setText] = useState('');
+  const [text, setText] = useState<string>('');
   const allFriends = useQuery(ChatFriend);
   const realm = useRealm();
   const { socket } = useSocket();
 
+  const [friendlist, setFriendlist] = useState<ExtendedChatFriend[]>(
+    Array.from(allFriends).map(f => ({ ...(f as unknown as ChatFriend), isOnline: false }))
+  );
+
   const friendsWithMessages = useMemo(() => {
-    return allFriends.filtered('messages.@size > 0');
-  }, [allFriends]);
+    return friendlist.filter(f => f.messages.length > 0);
+  }, [friendlist]);
 
   useEffect(() => {
     requestContactsPermission();
 
     if (!socket) return;
 
+    // 📨 Handle incoming messages
     const handleIncoming = async (data: {
       from: any;
       message: string;
@@ -42,7 +51,7 @@ const Chat = () => {
     }) => {
       const name = await findLocalNameForContact(data.from);
       const fallbackName = name ?? data.from.mobile ?? 'Unknown';
-    
+
       saveMessageToFriend(
         realm,
         {
@@ -54,13 +63,48 @@ const Chat = () => {
         data.timestamp
       );
     };
-    
+
     socket.on('receive_message', handleIncoming);
+
+    // 🟢 Initial presence sync
+    const friendEmails = allFriends.map(f => f.email);
+    socket.emit('get_active_friends', { friendEmails });
+
+    socket.on('active_friends_list', ({ active }: { active: string[] }) => {
+      console.log('✅ Active friends on load:', active);
+
+      setFriendlist(prev =>
+        prev.map(friend => 
+          Object.assign({}, friend, { isOnline: active.includes(friend.email) })
+        )
+      );
+    });
+
+    socket.on('friend_online', ({ email }: { email: string }) => {
+      console.log(`🟢 Friend online: ${email}`);
+      setFriendlist(prev =>
+        prev.map(friend => 
+          friend.email === email ? Object.assign({}, friend, { isOnline: true }) : friend
+        )
+      );
+    });
+
+    socket.on('friend_offline', ({ email }: { email: string }) => {
+      console.log(`🔴 Friend offline: ${email}`);
+      setFriendlist(prev =>
+        prev.map(friend =>
+          friend.email === email ? Object.assign(friend, { isOnline: false }) : friend
+        )
+      );
+    });
 
     return () => {
       socket.off('receive_message', handleIncoming);
+      socket.off('active_friends_list');
+      socket.off('friend_online');
+      socket.off('friend_offline');
     };
-  }, [socket, realm]);
+  }, [socket, realm, allFriends]);
 
   return (
     <View className="h-full w-full">

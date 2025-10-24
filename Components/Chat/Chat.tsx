@@ -8,6 +8,7 @@ export interface ContactCardProps {
   mobile: string;
   name: string;
   profilePicture: string;
+  isOnline?: boolean;
 }
 
 
@@ -16,12 +17,10 @@ type ChatItemProps = {
 };
 
 const Chat:React.FC<ChatItemProps> = ({user}) => {
-  console.log("user in chat item",user)
-  let isOnline = false;
-  const navigation = useNavigation();
-  const {profilePicture,name} = user
+  const navigation = useNavigation<any>();
+  const {profilePicture,name,isOnline} = user
   return (
-     <TouchableOpacity className="flex-row items-center px-4 py-3 border-b border-gray-200"  onPress={() => navigation.navigate("chatPage" as never,{user})}>
+     <TouchableOpacity className="flex-row items-center px-4 py-3 border-b border-gray-200"  onPress={() => navigation.navigate("chatPage", {user})}>
       <View className="relative">
         <Image
           source={{ uri: `${API_BASE_URL}${profilePicture}` }}
